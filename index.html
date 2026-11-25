@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Noor 💌</title>
+<style>
+:root{--bg:#fff1f4;--card:#ffffff;--ink:#4a2030;--soft:#8a5565;--pink:#e0557a;--pink2:#f7b6c8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#241119;--card:#331924;--ink:#ffe6ee;--soft:#d9a3b5;--pink:#ff7a9e;--pink2:#7a3a50}}
+:root[data-theme="dark"]{--bg:#241119;--card:#331924;--ink:#ffe6ee;--soft:#d9a3b5;--pink:#ff7a9e;--pink2:#7a3a50}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px 60px;position:relative;z-index:2}
+.card{background:var(--card);border:1px solid var(--pink2);border-radius:20px;padding:22px;margin:16px 0;box-shadow:0 6px 24px rgba(224,85,122,.12)}
+h1,h2{margin:.2em 0 .4em;color:var(--pink);text-align:center}
+p{line-height:1.7}
+.center{text-align:center}
+button,input,textarea{font:inherit;color:inherit}
+button{background:var(--pink);color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:1rem;cursor:pointer;margin:4px}
+button.alt{background:transparent;color:var(--pink);border:1.5px solid var(--pink)}
+input,textarea{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--pink2);background:transparent}
+.hidden{display:none!important}
+#lock{position:fixed;inset:0;z-index:10;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+#lock .card{max-width:380px;width:100%;text-align:center}
+.err{color:var(--pink);min-height:1.4em;font-size:.95rem}
+.fall{position:fixed;top:-40px;z-index:1;pointer-events:none;animation:fall linear infinite;opacity:.7}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.tabs{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+#arena{position:relative;height:300px;border-radius:16px;background:var(--bg);border:1.5px dashed var(--pink2);overflow:hidden;touch-action:manipulation}
+.heart{position:absolute;font-size:34px;cursor:pointer;user-select:none;transition:top 2.2s linear}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mc{aspect-ratio:1;border-radius:14px;background:var(--pink);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;user-select:none}
+.mc.open{background:var(--card);border:1.5px solid var(--pink)}
+.mc.done{background:var(--pink2);opacity:.6}
+.big{font-size:1.15rem}
+#no{position:relative}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <div class="card">
+    <div style="font-size:3rem">🔒</div>
+    <h2>Noor, this is for you</h2>
+    <p>Enter the special date to open it.<br><small>(Hint: the day it all began ✨)</small></p>
+    <input id="pw" placeholder="DD/MM" inputmode="text" autocomplete="off">
+    <p class="err" id="err"></p>
+    <button id="open">Open 💌</button>
+  </div>
+</div>
+
+<div class="wrap hidden" id="main">
+  <h1>I’m sorry, Noor 🥺</h1>
+
+  <div class="card" id="letter">
+    <p>Noor,</p>
+    <p>I know I hurt you, and I’m truly sorry. You didn’t deserve to feel that way, and I don’t want to hide behind excuses.</p>
+    <p>You matter more to me than my pride, my mood, or being right. I’m learning to listen better, to be more patient, and to show up for you the way you deserve.</p>
+    <p>I miss you, I appreciate you, and I promise to keep trying every single day. Please give me a chance to make it right. 🤍</p>
+    <p class="center"><em>— Zaibiii</em></p>
+  </div>
+
+  <div class="card">
+    <h2>Play a little 🎮</h2>
+    <div class="tabs">
+      <button class="alt" onclick="show('g1')">Catch hearts</button>
+      <button class="alt" onclick="show('g2')">Match cards</button>
+    </div>
+
+    <div id="g1" class="hidden">
+      <p class="center">Tap as many 💗 as you can in 20 seconds.<br>Score: <b id="sc">0</b> · Time: <b id="tm">20</b></p>
+      <div id="arena"></div>
+      <p class="center"><button id="start">Start</button></p>
+      <p class="center" id="g1msg"></p>
+    </div>
+
+    <div id="g2" class="hidden">
+      <p class="center">Find all the pairs. Moves: <b id="mv">0</b></p>
+      <div class="grid" id="board"></div>
+      <p class="center" id="g2msg"></p>
+      <p class="center"><button class="alt" onclick="initMatch()">Shuffle again</button></p>
+    </div>
+  </div>
+
+  <div class="card center" id="ask">
+    <h2>One question…</h2>
+    <p class="big">Can you forgive me, Noor?</p>
+    <button id="yes">Yes 💖</button>
+    <button class="alt" id="no">No</button>
+  </div>
+
+  <div class="card hidden" id="react">
+    <h2>Tell me how you feel 💬</h2>
+    <p class="center" id="emojis"></p>
+    <textarea id="msg" rows="3" placeholder="Write anything you want to tell me…"></textarea>
+    <p class="center"><button id="send">Send my reaction to Zaibiii 💌</button></p>
+    <p class="center"><small>This opens WhatsApp with your message ready — just choose Zaibiii’s chat and press send.</small></p>
+  </div>
+</div>
+
+<script>
+// ---- EDIT THESE ----
+const HIS_NAME = "Zaibiii";
+const ACCEPT = ["1802","18feb","18february","18022027","180227"]; // accepted lock answers
+const WA_NUMBER = ""; // optional: your number with country code, e.g. "923001234567". Leave empty to let her pick the chat.
+// --------------------
+
+const $ = id => document.getElementById(id);
+let emoji = "", forgave = false, bestScore = 0, matchDone = false;
+
+function norm(s){return s.toLowerCase().replace(/[^a-z0-9]/g,"")}
+function tryOpen(){
+  const v = norm($("pw").value);
+  if(ACCEPT.includes(v) || v==="182"){ $("lock").classList.add("hidden"); $("main").classList.remove("hidden"); petals(); }
+  else $("err").textContent = "Not quite… think about our special date 💭";
+}
+$("open").onclick = tryOpen;
+$("pw").addEventListener("keydown", e => { if(e.key==="Enter") tryOpen(); });
+
+function petals(){
+  const set = ["🌸","🌷","🌹","💗","✨"];
+  for(let i=0;i<14;i++){
+    const d = document.createElement("div");
+    d.className="fall"; d.textContent=set[i%set.length];
+    d.style.left=Math.random()*100+"vw";
+    d.style.fontSize=(16+Math.random()*16)+"px";
+    d.style.animationDuration=(8+Math.random()*8)+"s";
+    d.style.animationDelay=(-Math.random()*10)+"s";
+    document.body.appendChild(d);
+  }
+}
+
+function show(id){
+  ["g1","g2"].forEach(g => $(g).classList.toggle("hidden", g!==id));
+  if(id==="g2") initMatch();
+}
+
+/* Game 1: catch hearts */
+let score=0, left=20, timer=null, spawner=null;
+$("start").onclick = () => {
+  clearInterval(timer); clearInterval(spawner);
+  score=0; left=20; $("sc").textContent=0; $("tm").textContent=20; $("g1msg").textContent=""; $("arena").innerHTML="";
+  spawner = setInterval(spawn, 550);
+  timer = setInterval(() => {
+    left--; $("tm").textContent=left;
+    if(left<=0){
+      clearInterval(timer); clearInterval(spawner); $("arena").innerHTML="";
+      bestScore=Math.max(bestScore,score);
+      $("g1msg").textContent = score>=15 ? "Wow, "+score+" hearts! You have my whole heart 💘" : "You caught "+score+". Try again — I’ll never stop trying for you 🥰";
+    }
+  },1000);
+};
+function spawn(){
+  const a=$("arena"), h=document.createElement("div");
+  h.className="heart"; h.textContent="💗";
+  h.style.left=Math.random()*(a.clientWidth-40)+"px"; h.style.top="-40px";
+  h.onclick=()=>{score++; $("sc").textContent=score; h.remove()};
+  a.appendChild(h);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{h.style.top=(a.clientHeight)+"px"}));
+  setTimeout(()=>h.remove(),2400);
+}
+
+/* Game 2: memory match */
+let first=null, lock=false, moves=0, pairs=0;
+function initMatch(){
+  const icons=["🌹","💍","🧸","🍫","🌙","💌"], deck=[...icons,...icons].sort(()=>Math.random()-.5);
+  const b=$("board"); b.innerHTML=""; moves=0; pairs=0; first=null; lock=false;
+  $("mv").textContent=0; $("g2msg").textContent="";
+  deck.forEach(ic=>{
+    const c=document.createElement("div"); c.className="mc"; c.dataset.ic=ic; c.textContent="❔";
+    c.onclick=()=>flip(c); b.appendChild(c);
+  });
+}
+function flip(c){
+  if(lock||c.classList.contains("open")||c.classList.contains("done")) return;
+  c.classList.add("open"); c.textContent=c.dataset.ic;
+  if(!first){first=c;return}
+  moves++; $("mv").textContent=moves;
+  if(first.dataset.ic===c.dataset.ic){
+    first.classList.add("done"); c.classList.add("done"); first=null; pairs++;
+    if(pairs===6){matchDone=true; $("g2msg").textContent="You found them all in "+moves+" moves 💞 You’re my favourite person."}
+  } else {
+    lock=true; const a=first; first=null;
+    setTimeout(()=>{[a,c].forEach(x=>{x.classList.remove("open"); x.textContent="❔"}); lock=false},700);
+  }
+}
+
+/* Forgive question */
+const no=$("no");
+function dodge(e){
+  e.preventDefault();
+  no.style.left=(Math.random()*160-80)+"px"; no.style.top=(Math.random()*90-45)+"px";
+}
+no.addEventListener("mouseenter",dodge); no.addEventListener("touchstart",dodge,{passive:false}); no.addEventListener("click",dodge);
+$("yes").onclick=()=>{
+  forgave=true; $("ask").innerHTML='<div style="font-size:3rem">🥹💖</div><h2>Thank you, Noor</h2><p>I promise to deserve it.</p>';
+  $("react").classList.remove("hidden"); $("react").scrollIntoView({behavior:"smooth"});
+};
+["😭","🥹","😊","😡","🤍","🙄"].forEach(e=>{
+  const b=document.createElement("button"); b.className="alt"; b.textContent=e;
+  b.onclick=()=>{emoji=e; [...$("emojis").children].forEach(x=>x.style.opacity=x===b?1:.45)};
+  $("emojis").appendChild(b);
+});
+$("send").onclick=()=>{
+  const text = "Reaction to your sorry website 💌\n"
+    + "Mood: "+(emoji||"—")+"\n"
+    + "Forgave: "+(forgave?"Yes 💖":"Not yet")+"\n"
+    + "Heart game best: "+bestScore+" | Memory game: "+(matchDone?"completed":"not finished")+"\n"
+    + "Message: "+($("msg").value.trim()||"—");
+  const url="https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(text);
+  window.open(url,"_blank");
+};
+</script>
+</body>
+</html>
